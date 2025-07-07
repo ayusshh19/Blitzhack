@@ -1,4 +1,4 @@
-import Sidebar from "./component/Sidebar";
+import Sidebar from "./component/Sidebar/Sidebar";
 import Dashboard from "./Pages/Dashboard";
 import Supplier from "./Pages/Supplier";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
