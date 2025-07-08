@@ -21,21 +21,12 @@ const mockdata = [
     label: "Supplier",
     icon: IconNotes,
     initiallyOpened: true,
-    links: [
-      { label: "Supplier Listing", link: "/supplier" },
-      { label: "Forecasts", link: "/" },
-      { label: "Outlook", link: "/" },
-      { label: "Real time", link: "/" },
-    ],
+    links: [{ label: "Supplier Listing", link: "/supplier" }],
   },
   {
     label: "Customer",
     icon: IconCalendarStats,
-    links: [
-      { label: "Upcoming releases", link: "/" },
-      { label: "Previous releases", link: "/" },
-      { label: "Releases schedule", link: "/" },
-    ],
+    links: [{ label: "Customer Track", link: "/" }],
   },
   { label: "Analytics", icon: IconPresentationAnalytics },
 ];

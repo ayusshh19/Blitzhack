@@ -9,6 +9,7 @@ import {
   Text,
   TextInput,
   ScrollArea,
+  Button,
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
@@ -92,33 +93,92 @@ export default function SupplierList({ suppliers }) {
                 </Stack>
               </Group>
             </Group>
-
             <Collapse in={isOpen} mt="md">
-              <Table striped highlightOnHover withBorder withColumnBorders>
-                <thead>
-                  <tr>
-                    <th>Order No.</th>
-                    <th>Item</th>
-                    <th>Description</th>
-                    <th>Qty</th>
-                    <th>Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {s.orders.map((o, idx) => (
-                    <tr key={idx}>
-                      <td>{o.orderNumber}</td>
-                      <td>{o.orderItem}</td>
-                      <td>{o.description}</td>
-                      <td>{o.quantity}</td>
-                      <td>
-                        {o.currency}{" "}
-                        {parseFloat(o.orderValueLocal).toLocaleString()}
-                      </td>
+              <Card withBorder shadow="xs" radius="sm" p="lg" mt="lg">
+                <Table
+                  striped
+                  highlightOnHover
+                  verticalSpacing="lg" // More space between rows
+                  fontSize="sm"
+                  withColumnBorders
+                >
+                  <thead>
+                    <tr>
+                      <th style={{ textAlign: "left", paddingLeft: "16px" }}>
+                        Order No
+                      </th>
+                      <th style={{ textAlign: "left", paddingLeft: "16px" }}>
+                        Item
+                      </th>
+                      <th style={{ textAlign: "left", paddingLeft: "16px" }}>
+                        Description
+                      </th>
+                      <th style={{ textAlign: "left", paddingLeft: "16px" }}>
+                        Qty
+                      </th>
+                      <th style={{ textAlign: "left", paddingLeft: "16px" }}>
+                        Value
+                      </th>
+                      <th style={{ textAlign: "center" }}>Actions</th>
                     </tr>
-                  ))}
-                </tbody>
-              </Table>
+                  </thead>
+                  <tbody>
+                    {s.orders.map((o, idx) => (
+                      <tr key={idx}>
+                        <td style={{ textAlign: "left", padding: "12px 16px" }}>
+                          {o.orderNumber}
+                        </td>
+                        <td style={{ textAlign: "left", padding: "12px 16px" }}>
+                          {o.orderItem}
+                        </td>
+                        <td style={{ textAlign: "left", padding: "12px 16px" }}>
+                          {o.description}
+                        </td>
+                        <td style={{ textAlign: "left", padding: "12px 16px" }}>
+                          {o.quantity}
+                        </td>
+                        <td style={{ textAlign: "left", padding: "12px 16px" }}>
+                          {o.currency}{" "}
+                          {parseFloat(o.orderValueLocal).toLocaleString(
+                            undefined,
+                            {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 2,
+                            }
+                          )}
+                        </td>
+                        <td
+                          style={{ textAlign: "center", padding: "12px 16px" }}
+                        >
+                          <Group spacing="sm" position="center">
+                            <Button
+                              size="xs"
+                              variant="outline"
+                              color="blue"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                navigate(`/order/${o.orderNumber}`);
+                              }}
+                            >
+                              Track
+                            </Button>
+                            <Button
+                              size="xs"
+                              variant="outline"
+                              color="red"
+                              onClick={() =>
+                                console.log("Raise problem", o.orderNumber)
+                              }
+                            >
+                              Raise Problem
+                            </Button>
+                          </Group>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Card>
             </Collapse>
           </Card>
         );
