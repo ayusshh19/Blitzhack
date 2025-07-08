@@ -31,7 +31,12 @@ const mockdata = [
     icon: IconCalendarStats,
     links: [{ label: "Customer Request", link: "/customer/material" }],
   },
-  { label: "Analytics", icon: IconPresentationAnalytics },
+  {
+    label: "Analytics",
+    icon: IconPresentationAnalytics,
+    link: "/user_supplier/analytics",
+    isroot: true,
+  },
 ];
 
 export default function Sidebar() {

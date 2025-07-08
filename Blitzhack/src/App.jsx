@@ -2,6 +2,7 @@ import MaterialRequirement from "./component/Customers/MaterialRequirement";
 import OrderTracking from "./component/Orders/OrderTracking";
 import Sidebar from "./component/Sidebar/Sidebar";
 import MaterialQuotationBoard from "./component/Supplier/MaterialBoard";
+import AnalyticsDashboard from "./Pages/Analytics";
 import Dashboard from "./Pages/Dashboard";
 import Supplier from "./Pages/Supplier";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -22,6 +23,10 @@ function App() {
             <Route
               path="/customer/material"
               element={<MaterialRequirement />}
+            />
+            <Route
+              path="/user_supplier/analytics"
+              element={<AnalyticsDashboard />}
             />
           </Route>
         </Routes>
