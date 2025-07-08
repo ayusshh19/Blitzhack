@@ -9,28 +9,60 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import classes from "../../assets/sidebar/NavbarLinksGroup.module.css";
+import { useNavigate } from "react-router-dom";
 
-export function LinksGroup({ icon: Icon, label, initiallyOpened, links }) {
+export function LinksGroup({
+  icon: Icon,
+  label,
+  initiallyOpened,
+  links,
+  link,
+  isroot,
+}) {
   const hasLinks = Array.isArray(links);
   const [opened, setOpened] = useState(initiallyOpened || false);
+  const navigate = useNavigate();
 
-  const items = (hasLinks ? links : []).map((link) => (
+  const items = Array.isArray(links) ? (
+    links.map((subLink) => (
+      <Text
+        component="a"
+        key={subLink.label}
+        className={classes.link}
+        style={{ cursor: "pointer" }}
+        onClick={(e) => {
+          e.preventDefault();
+          navigate(subLink.link);
+        }}
+      >
+        {subLink.label}
+      </Text>
+    ))
+  ) : isroot ? (
     <Text
       component="a"
       className={classes.link}
-      href={link.link}
-      key={link.label}
-      onClick={(event) => event.preventDefault()}
-      // py="xs"
+      style={{ cursor: "pointer" }}
+      onClick={(e) => {
+        e.preventDefault();
+        navigate(link);
+      }}
     >
-      {link.label}
+      {label}
     </Text>
-  ));
+  ) : null;
 
   return (
     <>
       <UnstyledButton
-        onClick={() => setOpened((o) => !o)}
+        onClick={(e) => {
+          if (isroot && link) {
+            e.preventDefault();
+            navigate(link);
+          } else if (hasLinks) {
+            setOpened((o) => !o);
+          }
+        }}
         className={classes.control}
         px="md"
         py="sm"

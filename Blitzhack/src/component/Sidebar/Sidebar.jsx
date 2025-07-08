@@ -16,13 +16,13 @@ import { UserButton } from "./UserButton";
 import { Outlet } from "react-router-dom";
 
 const mockdata = [
-  { label: "Dashboard", icon: IconGauge },
+  { label: "Dashboard", icon: IconGauge, link: "/", isroot: true },
   {
     label: "Supplier",
     icon: IconNotes,
     initiallyOpened: true,
     links: [
-      { label: "Overview", link: "/" },
+      { label: "Supplier Listing", link: "/supplier" },
       { label: "Forecasts", link: "/" },
       { label: "Outlook", link: "/" },
       { label: "Real time", link: "/" },
