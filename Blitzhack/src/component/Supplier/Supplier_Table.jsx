@@ -13,11 +13,12 @@ import {
 } from "@mantine/core";
 import { IconSearch } from "@tabler/icons-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function SupplierList({ suppliers }) {
   const [search, setSearch] = useState("");
   const [opened, setOpened] = useState({});
-
+  const navigate = useNavigate();
   const filteredSuppliers = Object.values(suppliers).filter((s) =>
     (s?.supplier ?? "").toLowerCase().includes(search.toLowerCase())
   );
