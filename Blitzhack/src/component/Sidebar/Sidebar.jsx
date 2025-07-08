@@ -21,12 +21,15 @@ const mockdata = [
     label: "Supplier",
     icon: IconNotes,
     initiallyOpened: true,
-    links: [{ label: "Supplier Listing", link: "/supplier" }],
+    links: [
+      { label: "Supplier Listing", link: "/supplier" },
+      { label: "Material Qoutation", link: "/supplier/material" },
+    ],
   },
   {
     label: "Customer",
     icon: IconCalendarStats,
-    links: [{ label: "Customer Track", link: "/" }],
+    links: [{ label: "Customer Request", link: "/customer/material" }],
   },
   { label: "Analytics", icon: IconPresentationAnalytics },
 ];
