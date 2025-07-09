@@ -23,7 +23,7 @@ const mockdata = [
     initiallyOpened: true,
     links: [
       { label: "Supplier Listing", link: "/supplier" },
-      { label: "Material Qoutation", link: "/supplier/material" },
+      { label: "Material Quotation", link: "/supplier/material" },
       { label: "Material Analytics", link: "/supplier/material_history" },
     ],
   },
@@ -63,7 +63,7 @@ export default function Sidebar() {
           <UserButton />
         </div>
       </nav>
-      <Box style={{ flex: 1, padding: "16px", overflowY: "auto" }}>
+      <Box style={{ flex: 1, overflowY: "auto" }}>
         <Outlet />
       </Box>
     </Box>

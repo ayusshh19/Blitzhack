@@ -47,7 +47,7 @@ export default function OrderTracking() {
             stage: "Raw Supplier A",
             location: "Shanghai",
             transport: "Sea",
-            note: "Graphene shipped",
+            note: "Graphene shipped on 08-07-2025",
             icon: "supplier",
             status: "completed",
           },
@@ -55,7 +55,7 @@ export default function OrderTracking() {
             stage: "Raw Supplier B",
             location: "Gujarat",
             transport: "Rail",
-            note: "Binder shipped",
+            note: "Binder shipped on 08-07-2025",
             icon: "train",
             status: "completed",
           },
@@ -63,7 +63,7 @@ export default function OrderTracking() {
             stage: "Raw Supplier C",
             location: "Gujarat",
             transport: "Rail",
-            note: "Binder shipped",
+            note: "Binder shipped on 08-07-2025",
             icon: "train",
             status: "completed",
           },
@@ -74,7 +74,7 @@ export default function OrderTracking() {
         stage: "Factory",
         location: "BNR Factory, Bangalore",
         transport: "Truck",
-        note: "Materials blending",
+        note: "Materials blending on 09-07-2025",
         icon: "factory",
         status: "completed",
       },
@@ -155,7 +155,8 @@ export default function OrderTracking() {
                           p="xs"
                           shadow="xs"
                           bg={isStuck ? "yellow.0" : "gray.0"}
-                          maw={180}
+                          maw={120}
+                          style={{ textAlign: "center" }}
                         >
                           <Text size="xs">{s.note}</Text>
                         </Card>
@@ -211,7 +212,8 @@ export default function OrderTracking() {
                       p="xs"
                       shadow="xs"
                       bg={isStuck ? "yellow.0" : "gray.0"}
-                      maw={180}
+                      maw={120}
+                      style={{ textAlign: "center" }}
                     >
                       <Text size="xs">{step.note}</Text>
                     </Card>
