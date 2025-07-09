@@ -8,6 +8,7 @@ import {
 } from "@tabler/icons-react";
 import { Group, Paper, SimpleGrid, Text } from "@mantine/core";
 import classes from "../../assets/dashboard/statsgrid.module.css";
+import SupplyChainDashboard from "./SupplyChainDashboard";
 
 const icons = {
   user: IconUserPlus,
@@ -58,7 +59,8 @@ export function StatsGrid() {
   });
   return (
     <div className={classes.root}>
-      <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats}</SimpleGrid>
+      {/* <SimpleGrid cols={{ base: 1, xs: 2, md: 4 }}>{stats}</SimpleGrid> */}
+      <SupplyChainDashboard />
     </div>
   );
 }
