@@ -24,6 +24,7 @@ const mockdata = [
     links: [
       { label: "Supplier Listing", link: "/supplier" },
       { label: "Material Qoutation", link: "/supplier/material" },
+      { label: "Material Analytics", link: "/supplier/material_history" },
     ],
   },
   {

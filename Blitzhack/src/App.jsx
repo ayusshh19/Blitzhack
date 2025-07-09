@@ -2,6 +2,7 @@ import MaterialRequirement from "./component/Customers/MaterialRequirement";
 import OrderTracking from "./component/Orders/OrderTracking";
 import Sidebar from "./component/Sidebar/Sidebar";
 import MaterialQuotationBoard from "./component/Supplier/MaterialBoard";
+import MaterialSupplierHistory from "./component/Supplier/MaterialHistory";
 import AnalyticsDashboard from "./Pages/Analytics";
 import Dashboard from "./Pages/Dashboard";
 import Supplier from "./Pages/Supplier";
@@ -18,6 +19,10 @@ function App() {
             <Route
               path="/supplier/material"
               element={<MaterialQuotationBoard />}
+            />
+            <Route
+              path="/supplier/material_history"
+              element={<MaterialSupplierHistory />}
             />
             <Route path="/order/:orderId" element={<OrderTracking />} />
             <Route
