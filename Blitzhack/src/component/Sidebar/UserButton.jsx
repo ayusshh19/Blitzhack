@@ -1,4 +1,4 @@
-import { IconChevronRight, IconLogout } from "@tabler/icons-react";
+import { IconChevronRight, IconLogout, IconUser } from "@tabler/icons-react";
 import { Avatar, Group, Text, UnstyledButton, Menu } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import classes from "../../assets/sidebar/UserButton.module.css";
@@ -10,6 +10,12 @@ export function UserButton() {
     localStorage.removeItem("user");
     navigate("/login", { replace: true });
   };
+
+  const handleProfile = () => {
+    navigate("/profile");
+  };
+
+  const user = JSON.parse(localStorage.getItem("user")) || {};
 
   return (
     <Menu width={200} shadow="md" position="bottom-end" withArrow>
@@ -26,7 +32,7 @@ export function UserButton() {
                 Ayush Shukla
               </Text>
               <Text c="dimmed" size="xs">
-                Ayush.Shukla@saint-gobain.com
+                Ayush.Shukla2@saint-gobain.com
               </Text>
             </div>
 
@@ -36,6 +42,9 @@ export function UserButton() {
       </Menu.Target>
 
       <Menu.Dropdown>
+        <Menu.Item icon={<IconUser size={14} />} onClick={handleProfile}>
+          View Profile
+        </Menu.Item>
         <Menu.Item icon={<IconLogout size={14} />} onClick={handleLogout}>
           Logout
         </Menu.Item>
