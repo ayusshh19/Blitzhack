@@ -1,47 +1,60 @@
 import React from "react";
 import {
-  IconAdjustments,
   IconCalendarStats,
-  IconFileAnalytics,
   IconGauge,
-  IconLock,
   IconNotes,
   IconPresentationAnalytics,
 } from "@tabler/icons-react";
-import { Box, Code, Group, ScrollArea } from "@mantine/core";
+import { Box, Group, ScrollArea } from "@mantine/core";
 import Logo from "./Logo";
 import "../../assets/sidebar/Navbar.css";
 import { LinksGroup } from "./NavbarLinksGroup";
 import { UserButton } from "./UserButton";
 import { Outlet } from "react-router-dom";
 
-const mockdata = [
-  { label: "Dashboard", icon: IconGauge, link: "/", isroot: true },
-  {
-    label: "Supplier",
-    icon: IconNotes,
-    initiallyOpened: true,
-    links: [
-      { label: "Material Tracking", link: "/supplier" },
-      { label: "Material Quotation", link: "/supplier/material" },
-      { label: "Material Analytics", link: "/supplier/material_history" },
-    ],
-  },
-  {
-    label: "Customer",
-    icon: IconCalendarStats,
-    links: [{ label: "Customer Request", link: "/customer/material" }],
-  },
-  {
-    label: "Analytics",
-    icon: IconPresentationAnalytics,
-    link: "/user_supplier/analytics",
-    isroot: true,
-  },
-];
-
 export default function Sidebar() {
-  const links = mockdata.map((item) => (
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userRole = user?.role || "";
+
+  const allLinks = [
+    {
+      label: "Dashboard",
+      icon: IconGauge,
+      link: "/",
+      isroot: true,
+      roles: ["supplier", "customer", "source_manager", "delivery_manager"],
+    },
+    {
+      label: "Supplier",
+      icon: IconNotes,
+      initiallyOpened: true,
+      roles: ["supplier", "source_manager"],
+      links: [
+        { label: "Material Tracking", link: "/supplier" },
+        { label: "Material Quotation", link: "/supplier/material" },
+        { label: "Material Analytics", link: "/supplier/material_history" },
+      ],
+    },
+    {
+      label: "Customer",
+      icon: IconCalendarStats,
+      roles: ["customer", "source_manager"],
+      links: [{ label: "Customer Request", link: "/customer/material" }],
+    },
+    {
+      label: "Analytics",
+      icon: IconPresentationAnalytics,
+      link: "/user_supplier/analytics",
+      isroot: true,
+      roles: ["supplier", "customer", "delivery_manager"],
+    },
+  ];
+
+  const filteredLinks = allLinks.filter((item) =>
+    item.roles.includes(userRole)
+  );
+
+  const links = filteredLinks.map((item) => (
     <LinksGroup {...item} key={item.label} />
   ));
 
@@ -51,7 +64,6 @@ export default function Sidebar() {
         <div className="header">
           <Group justify="space-between">
             <Logo style={{ width: 120 }} />
-            {/* <Code fw={700}>Supplier Dashboard</Code> */}
           </Group>
         </div>
 
@@ -63,6 +75,7 @@ export default function Sidebar() {
           <UserButton />
         </div>
       </nav>
+
       <Box style={{ flex: 1, overflowY: "auto" }}>
         <Outlet />
       </Box>
