@@ -261,14 +261,14 @@ export default function OrderTracking() {
         <Tabs.List>
           {Object.keys(batches).map((batchKey) => (
             <Tabs.Tab key={batchKey} value={batchKey}>
-              Order #{batches[batchKey].orderId}
+              Batch #{batches[batchKey].orderId}
             </Tabs.Tab>
           ))}
         </Tabs.List>
       </Tabs>
 
       <Text fw={700} size="xl" mb="xs">
-        Order Tracking: #{trackingData.orderId}
+        Batch Tracking: #{trackingData.orderId}
       </Text>
       <Text size="sm" c="dimmed" mb="md">
         Material: {trackingData.material}
@@ -310,16 +310,6 @@ export default function OrderTracking() {
                         <Badge variant="light" color="gray" size="xs">
                           Source
                         </Badge>
-                        <Text size="xs" c="dimmed" ta="center" truncate>
-                          {s.location}
-                        </Text>
-                        <Text size="xs">🚚 {s.transport}</Text>
-
-                        {s.lastUpdated && (
-                          <Text size="xs" c="dimmed" ta="center" mt={-6} mb={4}>
-                            Last updated: {s.lastUpdated}
-                          </Text>
-                        )}
 
                         <Card
                           withBorder
@@ -376,16 +366,6 @@ export default function OrderTracking() {
                       <Badge variant="light" color="blue" size="xs">
                         Destination
                       </Badge>
-                    )}
-                    <Text size="xs" c="dimmed" ta="center" truncate>
-                      {step.location}
-                    </Text>
-                    <Text size="xs">🚚 {step.transport}</Text>
-
-                    {step.lastUpdated && (
-                      <Text size="xs" c="dimmed" ta="center" mt={-6} mb={4}>
-                        Last updated: {step.lastUpdated}
-                      </Text>
                     )}
 
                     <Card

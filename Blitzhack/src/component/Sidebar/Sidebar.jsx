@@ -22,7 +22,7 @@ const mockdata = [
     icon: IconNotes,
     initiallyOpened: true,
     links: [
-      { label: "Supplier Listing", link: "/supplier" },
+      { label: "Material Tracking", link: "/supplier" },
       { label: "Material Quotation", link: "/supplier/material" },
       { label: "Material Analytics", link: "/supplier/material_history" },
     ],
