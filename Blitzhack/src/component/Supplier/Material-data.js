@@ -1,41 +1,27 @@
 export const requests = [
   {
     id: 1,
-    customer: "XYZ Manufacturing",
-    material: "Tekbond Silicone GP - 260ML",
-    quantity: 1000,
-    location: "Chennai",
+    customer: "Saint-Gobain",
+    material: "Float Glass",
+    quantity: 1500,
+    location: "Chennai Plant",
     rawMaterials: [
       {
-        name: "Silicon Oil",
-        requiredQty: "500 kg",
-        quotations: [
+        name: "Silica Sand",
+        requiredQty: 1000,
+        origin: "Rajasthan, India",
+        certifications: ["ISO 14001", "EcoCert"],
+        complianceStatus: "Fully Compliant",
+        blockchainHash:
+          "f1c291fdd83a11733472bce89480a1b56e3cbbb5ee8c1684cb6c2376beaa7c5d",
+        supplierHistory: [
           {
-            supplierName: "ABC Chemicals",
-            esgScore: 55,
-            price: 45000,
-            currency: "INR",
-            note: "Delivery in 7 days",
-          },
-          {
-            supplierName: "GreenChem Ltd",
+            name: "Desert Minerals Pvt Ltd",
             esgScore: 82,
-            price: 48000,
-            currency: "INR",
-            note: "Ready to dispatch",
-          },
-        ],
-      },
-      {
-        name: "Catalyst Resin",
-        requiredQty: "250 kg",
-        quotations: [
-          {
-            supplierName: "Catalyte Co.",
-            esgScore: 78,
-            price: 28000,
-            currency: "INR",
-            note: "Dispatch in 3 days",
+            note: "Water-conserving extraction process",
+            certificateId: "CERT-IND-ISO14001-DM01",
+            blockchainHash:
+              "7f1e4b9015b6c41f4b3a251b90e62f06c41f183bfa93df6c6c69c5ae56a62dc4",
           },
         ],
       },
@@ -43,21 +29,27 @@ export const requests = [
   },
   {
     id: 2,
-    customer: "Secure Adhesives",
-    material: "Foam Adhesive FX-5",
-    quantity: 500,
-    location: "Hyderabad",
+    customer: "Saint-Gobain",
+    material: "Gypsum Board",
+    quantity: 2000,
+    location: "Rajasthan Plant",
     rawMaterials: [
       {
-        name: "Polymer Base",
-        requiredQty: "150 kg",
-        quotations: [
+        name: "Natural Gypsum",
+        requiredQty: 1800,
+        origin: "Iran",
+        certifications: ["REACH", "ISO 14044"],
+        complianceStatus: "Verified",
+        blockchainHash:
+          "bfa287c9d994ecb6e3823a51923a7eddb176e9b84204c9292b187e53ddbd88ff",
+        supplierHistory: [
           {
-            supplierName: "PolymerMart",
-            esgScore: 82,
-            price: 21000,
-            currency: "INR",
-            note: "Stock available",
+            name: "Gypsum Gulf Ltd",
+            esgScore: 79,
+            note: "Low emissions & traceable transport",
+            certificateId: "CERT-ME-REACH-GG01",
+            blockchainHash:
+              "e233b38ecdb4a163cb6c06db55bd56f3fa45a7680423c75ed1e1624b1e86a3de",
           },
         ],
       },
@@ -65,28 +57,27 @@ export const requests = [
   },
   {
     id: 3,
-    customer: "Omkar AutoParts",
-    material: "Sealant Grey - 200ml",
-    quantity: 1200,
-    location: "Ahmedabad",
+    customer: "Saint-Gobain",
+    material: "Glass Wool Insulation",
+    quantity: 900,
+    location: "Roorkee Plant",
     rawMaterials: [
       {
-        name: "Rubber Compound",
-        requiredQty: "300 kg",
-        quotations: [
+        name: "Recycled Glass Cullet",
+        requiredQty: 700,
+        origin: "India (urban recovery)",
+        certifications: ["LEED", "ISO 50001"],
+        complianceStatus: "Green Certified",
+        blockchainHash:
+          "f3348cd9e1d0f1bbdc7d1518cb3d1df8f4c6a99b3b9c2df4fe7d03b1a9b22aab",
+        supplierHistory: [
           {
-            supplierName: "RubberPro",
-            esgScore: 59,
-            price: 22000,
-            currency: "INR",
-            note: "Delivery in 10 days",
-          },
-          {
-            supplierName: "EcoRub Co.",
-            esgScore: 81,
-            price: 24000,
-            currency: "INR",
-            note: "Available immediately",
+            name: "UrbanGlass Recycle",
+            esgScore: 88,
+            note: "Diverted from landfill, ESG-verified",
+            certificateId: "CERT-IN-LEED-UG01",
+            blockchainHash:
+              "be39485eac45dc0b823181bd167c13b859b7fc905aa232fcdb824eb4a25eb729",
           },
         ],
       },
@@ -94,21 +85,27 @@ export const requests = [
   },
   {
     id: 4,
-    customer: "TruFit Builders",
-    material: "Weatherproof Coating",
-    quantity: 600,
-    location: "Bangalore",
+    customer: "Saint-Gobain",
+    material: "Cementitious Mortar",
+    quantity: 1100,
+    location: "Tamil Nadu Plant",
     rawMaterials: [
       {
-        name: "Hydrophobic Paste",
-        requiredQty: "200 kg",
-        quotations: [
+        name: "Fly Ash",
+        requiredQty: 500,
+        origin: "NTPC Thermal Plants",
+        certifications: ["BIS", "REACH"],
+        complianceStatus: "Certified",
+        blockchainHash:
+          "d299b2c5d30fc5a301b23351ec58efbfc69a1ce0e26a5b94cce986e560c0e91b",
+        supplierHistory: [
           {
-            supplierName: "NanoChem India",
-            esgScore: 66,
-            price: 41000,
-            currency: "INR",
-            note: "Delivery in 6 days",
+            name: "NTPC Flyash Services",
+            esgScore: 80,
+            note: "Waste reuse program contributor",
+            certificateId: "CERT-IN-BIS-NTPC01",
+            blockchainHash:
+              "7bb6f32e9ad2231ab11c58b4b101c0a2e4b3f651e4f44c322b11e5c891bc6db2",
           },
         ],
       },
@@ -116,150 +113,27 @@ export const requests = [
   },
   {
     id: 5,
-    customer: "ABC Paints Ltd",
-    material: "Resin Binder XZ-10",
-    quantity: 750,
-    location: "Delhi",
+    customer: "Saint-Gobain",
+    material: "Ceramic Tiles",
+    quantity: 3500,
+    location: "Andhra Pradesh Facility",
     rawMaterials: [
       {
-        name: "Acrylic Base",
-        requiredQty: "400 kg",
-        quotations: [
+        name: "Kaolin Clay",
+        requiredQty: 2000,
+        origin: "Jharkhand, India",
+        certifications: ["ISO 14001", "EcoLabel"],
+        complianceStatus: "Pending Audit",
+        blockchainHash:
+          "c2a95c0247b09a65eabebacc80a53e469f6ac9a4d05e802d20cd68bc91f79e14",
+        supplierHistory: [
           {
-            supplierName: "UltraBase Chemicals",
-            esgScore: 88,
-            price: 39000,
-            currency: "INR",
-            note: "Delivered in 4 days",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 6,
-    customer: "Modern Interiors",
-    material: "Wood Adhesive ClearBond",
-    quantity: 900,
-    location: "Pune",
-    rawMaterials: [
-      {
-        name: "PVA Emulsion",
-        requiredQty: "300 kg",
-        quotations: [
-          {
-            supplierName: "StickWell Pvt Ltd",
-            esgScore: 63,
-            price: 31000,
-            currency: "INR",
-            note: "Lead time 5 days",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 7,
-    customer: "EcoBuild Solutions",
-    material: "EcoShield Primer",
-    quantity: 1200,
-    location: "Kolkata",
-    rawMaterials: [
-      {
-        name: "Water-Based Binder",
-        requiredQty: "350 kg",
-        quotations: [
-          {
-            supplierName: "GreenBinder Ltd",
-            esgScore: 91,
-            price: 36500,
-            currency: "INR",
-            note: "Ships next day",
-          },
-          {
-            supplierName: "EcoResins",
-            esgScore: 70,
-            price: 35500,
-            currency: "INR",
-            note: "Ships in 3 days",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 8,
-    customer: "Neo Adhesives",
-    material: "QuickFix Epoxy",
-    quantity: 400,
-    location: "Nagpur",
-    rawMaterials: [
-      {
-        name: "Epoxy Base",
-        requiredQty: "180 kg",
-        quotations: [],
-      },
-      {
-        name: "Hardener X1",
-        requiredQty: "100 kg",
-        quotations: [
-          {
-            supplierName: "FixAll Chemicals",
-            esgScore: 79,
-            price: 26000,
-            currency: "INR",
-            note: "Custom blend available",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 9,
-    customer: "Laxmi Construction",
-    material: "Concrete Bonding Agent",
-    quantity: 1100,
-    location: "Jaipur",
-    rawMaterials: [
-      {
-        name: "Latex Polymer",
-        requiredQty: "320 kg",
-        quotations: [
-          {
-            supplierName: "BuildChem Co.",
-            esgScore: 58,
-            price: 33000,
-            currency: "INR",
-            note: "Lead time 6 days",
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 10,
-    customer: "Shree Coatings",
-    material: "NanoFinish - 100ml",
-    quantity: 2000,
-    location: "Mumbai",
-    rawMaterials: [
-      {
-        name: "Nano Additive",
-        requiredQty: "250 kg",
-        quotations: [
-          {
-            supplierName: "NanoPlus Tech",
-            esgScore: 85,
-            price: 47000,
-            currency: "INR",
-            note: "Immediate availability",
-          },
-          {
-            supplierName: "SmartMolex",
-            esgScore: 61,
-            price: 45500,
-            currency: "INR",
-            note: "Ships in 2 days",
+            name: "Mitti Minerals Ltd",
+            esgScore: 68,
+            note: "Awaiting 2025 environmental audit",
+            certificateId: "CERT-IN-ISO14001-MM01",
+            blockchainHash:
+              "0a9bfc0d325ae6eab07e36ef885b3d0cf09b79f72f20a964bb44b154bf93372e",
           },
         ],
       },

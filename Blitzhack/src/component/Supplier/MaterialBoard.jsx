@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Card,
   Text,
@@ -6,14 +6,20 @@ import {
   Badge,
   Table,
   Stack,
-  Modal,
-  Divider,
   ScrollArea,
   Paper,
-  Button,
   TextInput,
+  Select,
+  Slider,
+  ActionIcon,
+  Tooltip,
+  Modal,
+  Button,
 } from "@mantine/core";
-import { IconSearch } from "@tabler/icons-react";
+import { IconClipboard, IconQrcode } from "@tabler/icons-react";
+
+import QRCode from "react-qr-code";
+
 import { requests } from "./Material-data";
 
 function getEsgColor(score) {
@@ -22,252 +28,345 @@ function getEsgColor(score) {
   return "red";
 }
 
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text);
+}
+
 export default function SupplierMaterialListing() {
-  const [openedRequest, setOpenedRequest] = useState(null);
-  const [approvedQuotations, setApprovedQuotations] = useState({});
+  const [originFilter, setOriginFilter] = useState("");
+  const [complianceFilter, setComplianceFilter] = useState("");
+  const [minEsgFilter, setMinEsgFilter] = useState(0);
   const [search, setSearch] = useState("");
 
-  const handleApprove = (reqId, rawIndex, quoteIndex) => {
-    setApprovedQuotations((prev) => ({
-      ...prev,
-      [reqId]: {
-        ...(prev[reqId] || {}),
-        [rawIndex]: quoteIndex,
-      },
-    }));
-  };
+  const [modalData, setModalData] = useState(null);
 
-  const getApprovalStatus = (req) => {
-    const approvedMap = approvedQuotations[req.id] || {};
-    const totalRaw = req.rawMaterials.length;
-    const approvedCount = Object.keys(approvedMap).length;
+  const allOrigins = useMemo(() => {
+    const origins = new Set();
+    requests.forEach((r) =>
+      r.rawMaterials.forEach((m) => origins.add(m.origin))
+    );
+    return [...origins];
+  }, []);
 
-    if (approvedCount === 0) return { label: "Pending", color: "gray" };
-    if (approvedCount < totalRaw)
-      return { label: "Partially Approved", color: "orange" };
-    return { label: "Approved", color: "green" };
-  };
+  const allCompliance = useMemo(() => {
+    const statuses = new Set();
+    requests.forEach((r) =>
+      r.rawMaterials.forEach((m) => statuses.add(m.complianceStatus))
+    );
+    return [...statuses];
+  }, []);
 
-  const getQuotationStats = (rawMaterials) => {
-    const allQuotes = rawMaterials.flatMap((rm) => rm.quotations);
-    const count = allQuotes.length;
-    const prices = allQuotes.map((q) => q.price);
-    const min = prices.length ? Math.min(...prices) : 0;
-    const max = prices.length ? Math.max(...prices) : 0;
-    return { count, min, max };
-  };
-
-  const filteredRequests = requests.filter(
-    (r) =>
+  const filteredRequests = requests.filter((r) => {
+    const matchesSearch =
       r.customer.toLowerCase().includes(search.toLowerCase()) ||
-      r.material.toLowerCase().includes(search.toLowerCase())
-  );
+      r.material.toLowerCase().includes(search.toLowerCase());
+
+    const matchesFilter = r.rawMaterials.some((m) => {
+      const originMatch = originFilter ? m.origin === originFilter : true;
+      const complianceMatch = complianceFilter
+        ? m.complianceStatus === complianceFilter
+        : true;
+      const minEsgMatch = m.supplierHistory.some(
+        (s) => s.esgScore >= minEsgFilter
+      );
+      return originMatch && complianceMatch && minEsgMatch;
+    });
+
+    return matchesSearch && matchesFilter;
+  });
+
+  const openModal = (hash, label) => {
+    setModalData({ hash, label });
+  };
 
   return (
-    <>
-      <Stack p="md" spacing="sm">
-        <Text fw={700} size="xl">
-          Material Requests Summary
-        </Text>
+    <Stack p="md" spacing="md">
+      <Text fw={700} size="xl">
+        Saint-Gobain Material Sourcing & Traceability
+      </Text>
 
+      {/* Filters */}
+      <Group spacing="md" grow>
         <TextInput
-          icon={<IconSearch size={16} />}
           placeholder="Search by customer or material..."
           value={search}
           onChange={(e) => setSearch(e.currentTarget.value)}
+          icon={<IconClipboard size={16} />}
+          sx={{ flex: "2 1 300px" }}
         />
-
-        {filteredRequests.map((req) => {
-          const stats = getQuotationStats(req.rawMaterials);
-          const approval = getApprovalStatus(req);
-
-          return (
-            <Card
-              key={req.id}
-              withBorder
-              shadow="sm"
-              radius="md"
-              p="md"
-              onClick={() => setOpenedRequest(req)}
-              style={{ cursor: "pointer" }}
-            >
-              <Group grow align="flex-start" spacing="lg">
-                <Stack spacing={4}>
-                  <Text fw={600}>{req.material}</Text>
-                  <Text size="sm" c="dimmed">
-                    Qty: {req.quantity} | {req.location}
-                  </Text>
-                </Stack>
-
-                <Stack spacing={6} align="center">
-                  <Text size="sm" c="dimmed" fw={500}>
-                    Status
-                  </Text>
-                  <Badge size="md" color={approval.color}>
-                    {approval.label}
-                  </Badge>
-                </Stack>
-
-                <Stack spacing={6} align="flex-end">
-                  <Text size="sm" c="dimmed" fw={500}>
-                    Quotations
-                  </Text>
-                  <Badge color="blue" variant="light">
-                    {stats.count} received
-                  </Badge>
-                  {stats.count > 0 && (
-                    <Text size="xs" c="dimmed">
-                      ₹{stats.min.toLocaleString()} - ₹
-                      {stats.max.toLocaleString()}
-                    </Text>
-                  )}
-                </Stack>
-              </Group>
-            </Card>
-          );
-        })}
-
-        {filteredRequests.length === 0 && (
-          <Text ta="center" c="dimmed">
-            No matching requests.
+        <Select
+          placeholder="Filter by Origin"
+          data={[
+            { value: "", label: "All Origins" },
+            ...allOrigins.map((o) => ({ value: o, label: o })),
+          ]}
+          value={originFilter}
+          onChange={setOriginFilter}
+          sx={{ flex: "1 1 200px" }}
+        />
+        <Select
+          placeholder="Filter by Compliance Status"
+          data={[
+            { value: "", label: "All Compliance Status" },
+            ...allCompliance.map((c) => ({ value: c, label: c })),
+          ]}
+          value={complianceFilter}
+          onChange={setComplianceFilter}
+          sx={{ flex: "1 1 200px" }}
+        />
+        <Stack spacing={0} sx={{ flex: "1 1 200px" }}>
+          <Text size="sm" weight={500}>
+            Minimum ESG Score: {minEsgFilter}
           </Text>
-        )}
-      </Stack>
+          <Slider
+            min={0}
+            max={100}
+            step={1}
+            value={minEsgFilter}
+            onChange={setMinEsgFilter}
+          />
+        </Stack>
+      </Group>
+
+      {/* Results */}
+      {filteredRequests.length === 0 && (
+        <Text ta="center" c="dimmed" mt="xl">
+          No matching materials found.
+        </Text>
+      )}
+
+      <ScrollArea>
+        <Stack spacing="lg" mt="md">
+          {filteredRequests.map((req) => (
+            <Card key={req.id} withBorder shadow="sm" radius="md" p="lg">
+              <Group position="apart" mb="md" noWrap>
+                <Stack spacing={2}>
+                  <Text fw={700} size="xl" lh={1.2}>
+                    {req.material}
+                  </Text>
+                  <Text size="sm" color="dimmed" sx={{ letterSpacing: 0.2 }}>
+                    Customer: {req.customer} | Quantity: {req.quantity} |
+                    Location: {req.location}
+                  </Text>
+                </Stack>
+                <Badge color="green" variant="filled" size="lg" radius="sm">
+                  Blockchain Verified ✅
+                </Badge>
+              </Group>
+
+              <Table
+                verticalSpacing="xl"
+                highlightOnHover
+                striped
+                withBorder
+                sx={{
+                  th: {
+                    backgroundColor: "#f8f9fa",
+                    textAlign: "left",
+                    padding: "16px 12px",
+                    fontWeight: 600,
+                    fontSize: 14,
+                    color: "#212529",
+                  },
+                  td: {
+                    padding: "16px 12px",
+                    verticalAlign: "top",
+                    fontSize: 13,
+                    color: "#333",
+                    borderBottom: "1px solid #e9ecef",
+                  },
+                  tr: {
+                    "&:last-of-type td": { borderBottom: "none" },
+                  },
+                }}
+              >
+                <thead>
+                  <tr>
+                    <th style={{ minWidth: 120 }}>Raw Material</th>
+                    <th style={{ minWidth: 100 }}>Origin</th>
+                    <th style={{ width: 100 }}>Qty Required</th>
+                    <th style={{ minWidth: 140 }}>Compliance Status</th>
+                    <th style={{ minWidth: 140 }}>Certifications</th>
+                    {/* Removed Blockchain Hash column */}
+                    <th>Suppliers (ESG & Notes)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {req.rawMaterials.map((rm, idx) => (
+                    <tr key={idx}>
+                      <td>
+                        <Text fw={600} size="sm">
+                          {rm.name}
+                        </Text>
+                      </td>
+                      <td>{rm.origin}</td>
+                      <td>{rm.requiredQty}</td>
+                      <td>
+                        <Badge
+                          color={
+                            rm.complianceStatus === "Compliant"
+                              ? "green"
+                              : rm.complianceStatus === "Pending"
+                              ? "yellow"
+                              : "red"
+                          }
+                          variant="light"
+                          size="sm"
+                        >
+                          {rm.complianceStatus}
+                        </Badge>
+                      </td>
+                      <td>{rm.certifications.join(", ")}</td>
+
+                      {/* Removed Blockchain Hash cell */}
+
+                      <td>
+                        <Stack spacing={8}>
+                          {rm.supplierHistory.map((sup, sidx) => (
+                            <Paper
+                              key={sidx}
+                              p="sm"
+                              withBorder
+                              radius="md"
+                              sx={{
+                                backgroundColor: "#fefefe",
+                                boxShadow: "0 1px 3px rgba(0,0,0,0.05)",
+                              }}
+                            >
+                              <Group position="apart" noWrap spacing="xs">
+                                <Text fw={700} size="sm" lineClamp={1}>
+                                  {sup.name}
+                                </Text>
+
+                                <Badge
+                                  color={getEsgColor(sup.esgScore)}
+                                  size="sm"
+                                  radius="sm"
+                                >
+                                  ESG: {sup.esgScore}
+                                </Badge>
+                              </Group>
+                              <Text
+                                size="xs"
+                                color="dimmed"
+                                lineClamp={3}
+                                mt={4}
+                                mb={6}
+                              >
+                                {sup.note}
+                              </Text>
+
+                              <Group mt={6} spacing={6} align="center" noWrap>
+                                <Badge
+                                  color="teal"
+                                  variant="outline"
+                                  size="xs"
+                                  radius="sm"
+                                >
+                                  {sup.certificateId}
+                                </Badge>
+
+                                <Group spacing={6} noWrap>
+                                  <Tooltip
+                                    label="Copy certificate hash"
+                                    withArrow
+                                  >
+                                    <ActionIcon
+                                      onClick={() =>
+                                        copyToClipboard(sup.blockchainHash)
+                                      }
+                                      size="xs"
+                                      color="blue"
+                                      variant="light"
+                                      radius="sm"
+                                    >
+                                      <IconClipboard size={14} />
+                                    </ActionIcon>
+                                  </Tooltip>
+                                  <Tooltip label="Show QR code" withArrow>
+                                    <ActionIcon
+                                      onClick={() =>
+                                        openModal(
+                                          sup.blockchainHash,
+                                          `${sup.name} (Supplier)`
+                                        )
+                                      }
+                                      size="xs"
+                                      color="blue"
+                                      variant="light"
+                                      radius="sm"
+                                    >
+                                      <IconQrcode size={14} />
+                                    </ActionIcon>
+                                  </Tooltip>
+                                </Group>
+                              </Group>
+                            </Paper>
+                          ))}
+                        </Stack>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Card>
+          ))}
+        </Stack>
+      </ScrollArea>
 
       <Modal
-        opened={!!openedRequest}
-        onClose={() => setOpenedRequest(null)}
-        title={`Quotation Breakdown – ${openedRequest?.material}`}
-        size="xl"
+        opened={!!modalData}
+        onClose={() => setModalData(null)}
+        title={modalData?.label || ""}
         centered
-        overlayProps={{ blur: 3 }}
+        size="lg"
+        overlayOpacity={0.55}
+        overlayBlur={3}
+        padding="xl"
+        styles={{
+          header: { fontWeight: 700, fontSize: 20 },
+          body: {
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 16,
+          },
+        }}
       >
-        {openedRequest && (
-          <ScrollArea h={500}>
-            <Stack>
-              <Divider my="sm" label="Raw Material Quotations" />
+        {modalData && (
+          <>
+            <Paper
+              withBorder
+              p="sm"
+              sx={{
+                wordBreak: "break-word",
+                width: "100%",
+                textAlign: "center",
+                fontFamily: "monospace",
+                fontSize: 14,
+                borderRadius: 8,
+                backgroundColor: "#f5f5f5",
+                userSelect: "all",
+              }}
+            >
+              {modalData.hash}
+            </Paper>
 
-              {openedRequest.rawMaterials.map((raw, rawIndex) => {
-                const approved =
-                  approvedQuotations[openedRequest.id]?.[rawIndex];
+            <QRCode value={modalData.hash} size={180} />
 
-                return (
-                  <Card
-                    key={rawIndex}
-                    withBorder
-                    radius="md"
-                    shadow="xs"
-                    p="md"
-                    mb="xs"
-                    style={{ backgroundColor: "#f9f9f9" }}
-                  >
-                    <Group position="apart" mb="sm">
-                      <Text fw={600} size="md">
-                        {raw.name} ({raw.requiredQty})
-                      </Text>
-                      {approved !== undefined && (
-                        <Badge color="green" variant="filled" size="sm">
-                          Approved
-                        </Badge>
-                      )}
-                    </Group>
-
-                    {raw.quotations.length === 0 ? (
-                      <Text size="sm" c="red">
-                        No quotations received yet.
-                      </Text>
-                    ) : (
-                      <Table
-                        withColumnBorders
-                        verticalSpacing="sm"
-                        horizontalSpacing="md"
-                        fontSize="sm"
-                        sx={{
-                          borderRadius: "8px",
-                          border: "1px solid #dee2e6",
-                          overflow: "hidden",
-                        }}
-                      >
-                        <thead>
-                          <tr>
-                            <th style={{ padding: "12px" }}>Supplier</th>
-                            <th
-                              style={{ padding: "12px", textAlign: "center" }}
-                            >
-                              ESG
-                            </th>
-                            <th style={{ padding: "12px", textAlign: "right" }}>
-                              Price
-                            </th>
-                            <th style={{ padding: "12px" }}>Note</th>
-                            <th
-                              style={{ padding: "12px", textAlign: "center" }}
-                            >
-                              Action
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {raw.quotations.map((q, quoteIndex) => {
-                            const isApproved = approved === quoteIndex;
-
-                            return (
-                              <tr key={quoteIndex}>
-                                <td style={{ padding: "10px" }}>
-                                  {q.supplierName}
-                                </td>
-                                <td style={{ textAlign: "center" }}>
-                                  <Badge color={getEsgColor(q.esgScore)}>
-                                    {q.esgScore}
-                                  </Badge>
-                                </td>
-                                <td
-                                  style={{
-                                    textAlign: "right",
-                                    padding: "10px",
-                                  }}
-                                >
-                                  {q.currency}{" "}
-                                  {q.price.toLocaleString(undefined, {
-                                    maximumFractionDigits: 2,
-                                  })}
-                                </td>
-                                <td style={{ padding: "10px" }}>{q.note}</td>
-                                <td
-                                  style={{
-                                    textAlign: "center",
-                                    padding: "10px",
-                                  }}
-                                >
-                                  <Button
-                                    size="xs"
-                                    color={isApproved ? "gray" : "green"}
-                                    variant={isApproved ? "light" : "outline"}
-                                    disabled={isApproved}
-                                    onClick={() =>
-                                      handleApprove(
-                                        openedRequest.id,
-                                        rawIndex,
-                                        quoteIndex
-                                      )
-                                    }
-                                  >
-                                    {isApproved ? "Approved" : "Approve"}
-                                  </Button>
-                                </td>
-                              </tr>
-                            );
-                          })}
-                        </tbody>
-                      </Table>
-                    )}
-                  </Card>
-                );
-              })}
-            </Stack>
-          </ScrollArea>
+            <Button
+              fullWidth
+              onClick={() => {
+                copyToClipboard(modalData.hash);
+              }}
+              variant="filled"
+              color="blue"
+            >
+              Copy Hash to Clipboard
+            </Button>
+          </>
         )}
       </Modal>
-    </>
+    </Stack>
   );
 }

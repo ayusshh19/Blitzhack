@@ -30,6 +30,7 @@ import {
   IconAlertTriangle,
   IconClock,
 } from "@tabler/icons-react";
+import { useNavigate } from "react-router-dom";
 
 // Badge for status cells
 const StatusBadge = ({ status }) => {
@@ -239,6 +240,8 @@ export default function ProfilePage() {
       "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/avatars/avatar-2.png",
   };
 
+  const navigate = useNavigate();
+
   const roleKey = user.role?.toLowerCase() || "supplier";
   const content = roleContent[roleKey];
   const tableSections = content.sections.filter((s) => s.isTable);
@@ -288,13 +291,13 @@ export default function ProfilePage() {
             {!isMobile ? (
               <ScrollArea>
                 <Table
-                  verticalSpacing="xl" // Increased vertical spacing
-                  horizontalSpacing="xl" // Increased horizontal spacing
+                  verticalSpacing="xl"
+                  horizontalSpacing="xl"
                   striped
                   highlightOnHover
                   withTableBorder
                   withColumnBorders
-                  borderColor="#eaeaea" // Light border color
+                  borderColor="#eaeaea"
                   className="modern-table"
                 >
                   <thead>
@@ -351,7 +354,7 @@ export default function ProfilePage() {
                                   },
                                 }}
                                 onClick={() =>
-                                  alert(`Action "${cell}" on row ${rIdx + 1}`)
+                                  navigate(`/order/${row[0].replace("#", "")}`)
                                 }
                               >
                                 {cell}

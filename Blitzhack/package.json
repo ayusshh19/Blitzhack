@@ -15,9 +15,11 @@
     "@tabler/icons-react": "^3.34.0",
     "@tailwindcss/vite": "^4.1.11",
     "chart.js": "^4.5.0",
+    "qrcode.react": "^4.2.0",
     "react": "^19.1.0",
     "react-countup": "^6.5.3",
     "react-dom": "^19.1.0",
+    "react-qr-code": "^2.0.18",
     "react-router-dom": "^7.6.3",
     "recharts": "^3.0.2",
     "tailwindcss": "^4.1.11"
