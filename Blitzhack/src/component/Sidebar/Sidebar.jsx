@@ -28,7 +28,7 @@ export default function Sidebar() {
       label: "Supplier",
       icon: IconNotes,
       initiallyOpened: true,
-      roles: ["supplier", "source_manager"],
+      roles: ["supplier", "source_manager", "delivery_manager"],
       links: [
         { label: "Material Tracking", link: "/supplier" },
         { label: "Material Quotation", link: "/supplier/material" },
@@ -38,7 +38,7 @@ export default function Sidebar() {
     {
       label: "Customer",
       icon: IconCalendarStats,
-      roles: ["customer", "source_manager"],
+      roles: ["customer", "source_manager", "delivery_manager"],
       links: [{ label: "Customer Request", link: "/customer/material" }],
     },
     {
