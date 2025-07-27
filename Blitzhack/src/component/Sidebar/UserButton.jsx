@@ -12,7 +12,7 @@ export function UserButton() {
   };
 
   const handleProfile = () => {
-    navigate("/profile");
+    navigate(`/profile`);
   };
 
   const user = JSON.parse(localStorage.getItem("user")) || {};

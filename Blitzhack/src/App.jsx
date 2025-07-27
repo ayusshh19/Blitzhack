@@ -14,6 +14,7 @@ import MaterialSupplierHistory from "./component/Supplier/MaterialHistory";
 import AnalyticsDashboard from "./Pages/Analytics";
 import Dashboard from "./Pages/Dashboard";
 import Supplier from "./Pages/Supplier";
+import ProfilePage from "./Pages/Profilepage";
 
 function ProtectedLayout() {
   const user = localStorage.getItem("user");
@@ -52,6 +53,7 @@ function App() {
             path="/user_supplier/analytics"
             element={<AnalyticsDashboard />}
           />
+          <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
