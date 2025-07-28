@@ -15,6 +15,7 @@ import {
   Modal,
   Table,
   Timeline,
+  Alert,
 } from "@mantine/core";
 import {
   IconShip,
@@ -36,6 +37,7 @@ const batches = {
   batch1: {
     orderId: "1001",
     material: "Norton Graphene Coating -50ml set",
+    finalProductBatch: "SG-2025-07-09-001",
     productionPlan: {
       machineAllocation: [
         {
@@ -71,25 +73,28 @@ const batches = {
       ],
       materialIntegration: [
         {
-          material: "Graphene from Supplier A",
+          material: "Graphene",
           quantity: "500g",
           integrationPoint: "Mixing Stage",
           status: "integrated",
           timestamp: "2025-07-09 08:15",
+          batchNumber: "RM-GR-2025-07-05-A1",
         },
         {
-          material: "Binder from Supplier B",
+          material: "Binder",
           quantity: "1.2kg",
           integrationPoint: "Mixing Stage",
           status: "integrated",
           timestamp: "2025-07-09 08:20",
+          batchNumber: "RM-GR-2025-07-05-A1",
         },
         {
-          material: "Solvent from Supplier C",
+          material: "Solvent",
           quantity: "800ml",
           integrationPoint: "Mixing Stage",
           status: "integrated",
           timestamp: "2025-07-09 08:25",
+          batchNumber: "RM-GR-2025-07-05-A1",
         },
       ],
       qualityChecks: [
@@ -124,28 +129,6 @@ const batches = {
             lastUpdated: "2025-07-08 15:23",
             verified: true,
             blockchainTx: "0x123abc...",
-          },
-          {
-            stage: "Raw Supplier B",
-            location: "Gujarat",
-            transport: "Rail",
-            note: "Binder shipped on 08-07-2025",
-            icon: "train",
-            status: "completed",
-            lastUpdated: "2025-07-08 14:00",
-            verified: false,
-            blockchainTx: null,
-          },
-          {
-            stage: "Raw Supplier C",
-            location: "Gujarat",
-            transport: "Rail",
-            note: "Binder shipped on 08-07-2025",
-            icon: "train",
-            status: "completed",
-            lastUpdated: "2025-07-08 14:05",
-            verified: true,
-            blockchainTx: "0x789def...",
           },
         ],
       },
@@ -497,9 +480,24 @@ export default function OrderTracking() {
     );
   };
 
+  const user = JSON.parse(localStorage.getItem("user"));
+  const userRole = user?.role || "";
+  console.log(userRole);
+  const roleStageMap = {
+    customer: ["Factory", "Warehouse", "Customer"],
+    supplier: ["Raw Supplier A", "Factory", "Warehouse", "Customer"],
+    source_manager: ["Raw Supplier A", "Factory", "Warehouse"],
+    delivery_manager: ["Factory", "Warehouse", "Customer"],
+    production_manager: ["Warehouse"],
+  };
+
+  const canViewStage = (stageName) => {
+    const allowedStages = roleStageMap[userRole] || [];
+    return allowedStages.includes("*") || allowedStages.includes(stageName);
+  };
+
   return (
     <Box p="md" maw={1200} mx="auto">
-      {/* Batch Tabs */}
       <Tabs value={selectedBatch} onChange={setSelectedBatch} mb="md">
         <Tabs.List>
           {Object.keys(batches).map((batchKey) => (
@@ -517,7 +515,6 @@ export default function OrderTracking() {
         Material: {trackingData.material}
       </Text>
 
-      {/* Top-level Tab: Tracking vs Production Plan */}
       <Tabs value={activeTab} onChange={setActiveTab} mb="md">
         <Tabs.List>
           <Tabs.Tab value="tracking">Supply Chain Tracking</Tabs.Tab>
@@ -531,136 +528,159 @@ export default function OrderTracking() {
             <Group spacing={40} align="flex-start" noWrap>
               {trackingData.journey.map((step, i) =>
                 step.type === "parallel" ? (
-                  <Group key={i} spacing={24} align="flex-start" noWrap>
-                    {step.stages.map((s, j) => {
-                      const Icon = iconMap[s.icon];
-                      const color = statusColors[s.status];
-                      const isPending = s.status === "pending";
-                      const isStuck = s.status === "in-progress";
+                  <Group key={i} spacing={24} align="center" noWrap>
+                    {step.stages
+                      .filter((s) => canViewStage(s.stage))
+                      .map((s, j) => {
+                        const Icon = iconMap[s.icon];
+                        const color = statusColors[s.status];
+                        const isPending = s.status === "pending";
+                        const isStuck = s.status === "in-progress";
 
-                      return (
-                        <Stack
-                          key={j}
-                          align="center"
-                          spacing={4}
-                          style={{
-                            opacity: isPending ? 0.5 : 1,
-                            maxWidth: 160,
-                          }}
-                        >
-                          <Avatar color={color} size={36} radius="xl">
-                            <Icon size={18} />
-                          </Avatar>
-                          <Text size="xs" fw={500} ta="center" truncate>
-                            {s.stage}
-                          </Text>
-                          <Badge variant="light" color="gray" size="xs">
-                            Source
-                          </Badge>
-
-                          <Card
-                            withBorder
-                            radius="sm"
-                            p="xs"
-                            shadow="xs"
-                            bg={isStuck ? "yellow.0" : "gray.0"}
-                            maw={160}
-                            style={{ cursor: "pointer", textAlign: "center" }}
-                            onClick={() => openModalWithData(s)}
-                            sx={{
-                              height: 90,
-                              overflow: "hidden",
-                              display: "flex",
-                              flexDirection: "column",
-                              justifyContent: "center",
+                        return (
+                          <Stack
+                            key={j}
+                            align="center"
+                            spacing={4}
+                            style={{
+                              opacity: isPending ? 0.5 : 1,
+                              maxWidth: 160,
                             }}
                           >
-                            <Text size="xs" fw={500} lineClamp={2}>
-                              {s.note}
+                            <Avatar color={color} size={36} radius="xl">
+                              <Icon size={18} />
+                            </Avatar>
+                            <Text size="xs" fw={500} ta="center" truncate>
+                              {s.stage}
                             </Text>
-                          </Card>
-
-                          {isStuck && (
-                            <Badge color="yellow" size="xs" mt={4}>
-                              In Transit (Delayed)
+                            <Badge variant="light" color="gray" size="xs">
+                              Source
                             </Badge>
-                          )}
-                        </Stack>
-                      );
-                    })}
+
+                            <Card
+                              withBorder
+                              radius="sm"
+                              p="xs"
+                              shadow="xs"
+                              bg={isStuck ? "yellow.0" : "gray.0"}
+                              maw={160}
+                              style={{ cursor: "pointer", textAlign: "center" }}
+                              onClick={() => openModalWithData(s)}
+                              sx={{
+                                height: 90,
+                                overflow: "hidden",
+                                display: "flex",
+                                flexDirection: "column",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Text size="xs" fw={500} lineClamp={2}>
+                                {s.note}
+                              </Text>
+                            </Card>
+
+                            {isStuck && (
+                              <Badge color="yellow" size="xs" mt={4}>
+                                In Transit (Delayed)
+                              </Badge>
+                            )}
+                          </Stack>
+                        );
+                      })}
+                    {i !== trackingData.journey.length - 1 &&
+                      ["source_manager", "supplier"].includes(userRole) && (
+                        <Box
+                          style={{
+                            height: 2,
+                            width: 40,
+                            background: "#74c0fc",
+                            margin: "0 12px",
+                          }}
+                        />
+                      )}
                   </Group>
                 ) : (
-                  <Group key={i} spacing={0} align="center" noWrap>
-                    <Stack
-                      align="center"
-                      spacing={4}
-                      style={{
-                        opacity: step.status === "pending" ? 0.5 : 1,
-                        maxWidth: 160,
-                      }}
-                    >
-                      <Avatar
-                        color={statusColors[step.status]}
-                        size={36}
-                        radius="xl"
-                      >
-                        {React.createElement(iconMap[step.icon], { size: 18 })}
-                      </Avatar>
-                      <Text size="xs" fw={500} ta="center" truncate>
-                        {step.stage}
-                      </Text>
-                      {i === trackingData.journey.length - 1 && (
-                        <Badge variant="light" color="blue" size="xs">
-                          Destination
-                        </Badge>
-                      )}
-
-                      <Card
-                        withBorder
-                        radius="sm"
-                        p="xs"
-                        shadow="xs"
-                        bg={
-                          step.status === "in-progress" ? "yellow.0" : "gray.0"
-                        }
-                        maw={160}
-                        style={{ cursor: "pointer", textAlign: "center" }}
-                        onClick={() => openModalWithData(step)}
-                        sx={{
-                          height: 90,
-                          overflow: "hidden",
-                          display: "flex",
-                          flexDirection: "column",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Text size="xs" fw={500} lineClamp={2}>
-                          {step.note}
-                        </Text>
-                      </Card>
-
-                      {step.status === "in-progress" && (
-                        <Badge color="yellow" size="xs" mt={4}>
-                          In Transit (Delayed)
-                        </Badge>
-                      )}
-                    </Stack>
-                    {i !== trackingData.journey.length - 1 && (
-                      <Box
+                  canViewStage(step.stage) && (
+                    <Group key={i} spacing={0} align="center" noWrap>
+                      <Stack
+                        align="center"
+                        spacing={4}
                         style={{
-                          height: 2,
-                          width: 40,
-                          background: "#74c0fc",
-                          margin: "0 12px",
+                          opacity: step.status === "pending" ? 0.5 : 1,
+                          maxWidth: 160,
                         }}
-                      />
-                    )}
-                  </Group>
+                      >
+                        <Avatar
+                          color={statusColors[step.status]}
+                          size={36}
+                          radius="xl"
+                        >
+                          {React.createElement(iconMap[step.icon], {
+                            size: 18,
+                          })}
+                        </Avatar>
+                        <Text size="xs" fw={500} ta="center" truncate>
+                          {step.stage}
+                        </Text>
+                        {i === trackingData.journey.length - 1 && (
+                          <Badge variant="light" color="blue" size="xs">
+                            Destination
+                          </Badge>
+                        )}
+
+                        <Card
+                          withBorder
+                          radius="sm"
+                          p="xs"
+                          shadow="xs"
+                          bg={
+                            step.status === "in-progress"
+                              ? "yellow.0"
+                              : "gray.0"
+                          }
+                          maw={160}
+                          style={{ cursor: "pointer", textAlign: "center" }}
+                          onClick={() => openModalWithData(step)}
+                          sx={{
+                            height: 90,
+                            overflow: "hidden",
+                            display: "flex",
+                            flexDirection: "column",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Text size="xs" fw={500} lineClamp={2}>
+                            {step.note}
+                          </Text>
+                        </Card>
+
+                        {step.status === "in-progress" && (
+                          <Badge color="yellow" size="xs" mt={4}>
+                            In Transit (Delayed)
+                          </Badge>
+                        )}
+                      </Stack>
+                      {i !== trackingData.journey.length - 1 && (
+                        <Box
+                          style={{
+                            height: 2,
+                            width: 40,
+                            background: "#74c0fc",
+                            margin: "0 12px",
+                          }}
+                        />
+                      )}
+                    </Group>
+                  )
                 )
               )}
             </Group>
           </ScrollArea>
         </>
+      ) : ["customer", "supplier", "delivery_manager"].includes(userRole) ? (
+        <Alert color="red" title="Access Denied">
+          You don't have permission to view production planning.
+        </Alert>
       ) : (
         <Stack spacing="xl" mt="xl">
           <Card
@@ -751,7 +771,6 @@ export default function OrderTracking() {
             </ScrollArea>
           </Card>
 
-          {/* Quality Checks - unchanged as it's a timeline */}
           <Card
             withBorder
             shadow="md"
@@ -887,7 +906,7 @@ export default function OrderTracking() {
                 leftIcon={<IconExternalLink size={18} />}
                 sx={{ width: "fit-content", borderRadius: 8, fontWeight: 600 }}
               >
-                Verify on Blockchain
+                Acknowledge Location
               </Button>
             )}
 
@@ -965,6 +984,165 @@ export default function OrderTracking() {
               Detailed tracking info and timestamps would appear here.
             </Box>
           </Stack>
+        )}
+
+        {modalData?.stage === "Factory" && modalData.status === "completed" && (
+          <Box mt="md">
+            <Text size="sm" fw={600} mb="md">
+              Batch Information
+            </Text>
+            <Stack spacing="md">
+              <Group spacing="xl">
+                <Badge
+                  variant="outline"
+                  color="blue"
+                  leftSection={<IconCheck size={14} />}
+                  size="lg"
+                >
+                  Final Product: {trackingData.finalProductBatch}
+                </Badge>
+              </Group>
+
+              {trackingData.productionPlan.materialIntegration.length > 0 && (
+                <Box>
+                  <Text size="sm" fw={500} mb="sm">
+                    Raw Material Batches:
+                  </Text>
+
+                  {/* ✅ Table wrapper with padding and border */}
+                  <Box
+                    sx={(theme) => ({
+                      padding: theme.spacing.md,
+                      border: `1px solid ${theme.colors.gray[3]}`,
+                      borderRadius: theme.radius.sm,
+                      overflow: "hidden",
+                    })}
+                  >
+                    <Table
+                      striped
+                      highlightOnHover
+                      withBorder
+                      withColumnBorders
+                      verticalSpacing="sm"
+                      fontSize="sm"
+                      sx={{ borderCollapse: "separate", borderSpacing: 0 }}
+                    >
+                      <thead>
+                        <tr>
+                          <th
+                            style={{
+                              backgroundColor: "#f8f9fa",
+                              fontWeight: 600,
+                              padding: "12px 16px",
+                              borderBottom: "1px solid #e9ecef",
+                              borderTopLeftRadius: "8px",
+                            }}
+                          >
+                            Material
+                          </th>
+                          <th
+                            style={{
+                              backgroundColor: "#f8f9fa",
+                              fontWeight: 600,
+                              padding: "12px 16px",
+                              borderBottom: "1px solid #e9ecef",
+                            }}
+                          >
+                            Batch Number
+                          </th>
+                          <th
+                            style={{
+                              backgroundColor: "#f8f9fa",
+                              fontWeight: 600,
+                              padding: "12px 16px",
+                              borderBottom: "1px solid #e9ecef",
+                              borderTopRightRadius: "8px",
+                            }}
+                          >
+                            Status
+                          </th>
+                        </tr>
+                      </thead>
+
+                      <tbody>
+                        {trackingData.productionPlan.materialIntegration.map(
+                          (mat, index, arr) =>
+                            mat.batchNumber && (
+                              <tr key={mat.material}>
+                                <td
+                                  style={{
+                                    padding: "12px 16px",
+                                    borderBottom:
+                                      index === arr.length - 1
+                                        ? "none"
+                                        : "1px solid #e9ecef",
+                                    borderLeft: "1px solid #e9ecef",
+                                    ...(index === arr.length - 1 && {
+                                      borderBottomLeftRadius: "8px",
+                                    }),
+                                  }}
+                                >
+                                  <Group spacing="sm">
+                                    <Avatar size={24} radius="xl" color="blue">
+                                      {mat.material.charAt(0)}
+                                    </Avatar>
+                                    <Text>{mat.material}</Text>
+                                  </Group>
+                                </td>
+
+                                <td
+                                  style={{
+                                    padding: "12px 16px",
+                                    borderBottom:
+                                      index === arr.length - 1
+                                        ? "none"
+                                        : "1px solid #e9ecef",
+                                  }}
+                                >
+                                  <Badge
+                                    variant="light"
+                                    color="gray"
+                                    fullWidth
+                                    sx={{ maxWidth: 180 }}
+                                  >
+                                    {mat.batchNumber}
+                                  </Badge>
+                                </td>
+
+                                <td
+                                  style={{
+                                    padding: "12px 16px",
+                                    borderBottom:
+                                      index === arr.length - 1
+                                        ? "none"
+                                        : "1px solid #e9ecef",
+                                    borderRight: "1px solid #e9ecef",
+                                    ...(index === arr.length - 1 && {
+                                      borderBottomRightRadius: "8px",
+                                    }),
+                                  }}
+                                >
+                                  <Badge
+                                    color={
+                                      mat.status === "integrated"
+                                        ? "green"
+                                        : "yellow"
+                                    }
+                                    variant="light"
+                                  >
+                                    {mat.status}
+                                  </Badge>
+                                </td>
+                              </tr>
+                            )
+                        )}
+                      </tbody>
+                    </Table>
+                  </Box>
+                </Box>
+              )}
+            </Stack>
+          </Box>
         )}
       </Modal>
     </Box>
