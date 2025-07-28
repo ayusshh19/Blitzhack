@@ -226,6 +226,61 @@ const roleContent = {
       },
     ],
   },
+  production_manager: {
+    title: "Production Dashboard",
+    sections: [
+      {
+        icon: IconPackage,
+        title: "Material Inventory",
+        isTable: true,
+        table: {
+          headers: [
+            "Material",
+            "Current Stock",
+            "Daily Usage",
+            "Days Remaining",
+            "Status",
+          ],
+          rows: [
+            ["Iron Ore", "1,250 tons", "85 tons/day", "14 days", "Active"],
+            ["Bauxite", "850 tons", "45 tons/day", "18 days", "Active"],
+            ["Copper", "320 tons", "22 tons/day", "14 days", "Low Stock"],
+          ],
+        },
+      },
+      {
+        icon: IconLeaf,
+        title: "Production Efficiency",
+        content: "Overall equipment effectiveness: 82%",
+        stats: [
+          { label: "Quality Rate", value: "98.5%", color: "teal" },
+          { label: "Performance", value: "83%", color: "yellow" },
+          { label: "Availability", value: "84%", color: "blue" },
+        ],
+      },
+      {
+        icon: IconCertificate,
+        title: "Quality Control",
+        content: "Last batch quality metrics",
+        list: [
+          "99.2% purity standard met",
+          "0.2% defect rate (target: <0.5%)",
+          "All safety checks passed",
+        ],
+        progress: { label: "Quality Compliance", value: 98 },
+      },
+      {
+        icon: IconUsers,
+        title: "Team Performance",
+        content: "Shift A productivity: 12% above target",
+        metrics: [
+          { label: "Output/Hour", value: "15.2 tons" },
+          { label: "Waste Reduction", value: "8% YoY" },
+          { label: "Safety Days", value: "142 days" },
+        ],
+      },
+    ],
+  },
 };
 
 export default function ProfilePage() {
@@ -244,8 +299,8 @@ export default function ProfilePage() {
 
   const roleKey = user.role?.toLowerCase() || "supplier";
   const content = roleContent[roleKey];
-  const tableSections = content.sections.filter((s) => s.isTable);
-  const nonTableSections = content.sections.filter((s) => !s.isTable);
+  const tableSections = content?.sections.filter((s) => s.isTable);
+  const nonTableSections = content?.sections.filter((s) => !s.isTable);
 
   return (
     <Container size="lg" py="xl">
@@ -274,7 +329,7 @@ export default function ProfilePage() {
         <Divider my="md" color={theme.colors.gray[2]} />
 
         <Title order={2} mb="lg" style={{ fontWeight: 600 }}>
-          {content.title}
+          {content?.title}
         </Title>
 
         {/* Render full-width table sections */}
