@@ -22,10 +22,10 @@ export default function Sidebar() {
       icon: IconGauge,
       link: "/",
       isroot: true,
-      roles: ["supplier", "customer", "source_manager", "delivery_manager"],
+      roles: ["source_manager", "delivery_manager"],
     },
     {
-      label: "Source Management",
+      label: "Supply Chain",
       icon: IconNotes,
       initiallyOpened: true,
       roles: ["source_manager", "delivery_manager"],
@@ -38,7 +38,7 @@ export default function Sidebar() {
     {
       label: "Customer",
       icon: IconCalendarStats,
-      roles: ["customer", "source_manager", "delivery_manager"],
+      roles: ["customer", "delivery_manager"],
       links: [{ label: "Customer Request", link: "/customer/material" }],
     },
     {
@@ -46,7 +46,7 @@ export default function Sidebar() {
       icon: IconPresentationAnalytics,
       link: "/user_supplier/analytics",
       isroot: true,
-      roles: ["supplier", "customer", "delivery_manager"],
+      roles: [ "delivery_manager"],
     },
   ];
 
