@@ -15,6 +15,7 @@ import AnalyticsDashboard from "./Pages/Analytics";
 import Dashboard from "./Pages/Dashboard";
 import Supplier from "./Pages/Supplier";
 import ProfilePage from "./Pages/Profilepage";
+import GlassProductionDashboard from "./component/Trackings/ProductionM";
 import ProductionPlannerDashboard from "./Pages/ProductionPlannerDashboard";
 
 function ProtectedLayout() {
@@ -38,7 +39,12 @@ function App() {
 
         {/* Protected Routes */}
         <Route element={<ProtectedLayout />}>
-          <Route path="/" element={<Dashboard />} />
+          
+          (localStorage.getItem("user").role === "production_manager"? (<Route path="/" element={<ProductionPlannerDashboard />} />) : (<Route path="/" element={<Dashboard />} />))
+          {/* <Route
+            path="/production_dashboard"
+            element={<ProductionPlannerDashboard />}
+          /> */}
           <Route path="/supplier" element={<Supplier />} />
           <Route
             path="/supplier/material"
@@ -48,6 +54,10 @@ function App() {
             path="/supplier/material_history"
             element={<MaterialSupplierHistory />}
           />
+          <Route 
+            path="/production_manager"
+            element={<GlassProductionDashboard/>}  
+          />
           <Route path="/order/:orderId" element={<OrderTracking />} />
           <Route path="/customer/material" element={<MaterialRequirement />} />
           <Route
@@ -55,10 +65,6 @@ function App() {
             element={<AnalyticsDashboard />}
           />
           <Route path="/profile" element={<ProfilePage />} />
-          <Route
-            path="/production_dashboard"
-            element={<ProductionPlannerDashboard />}
-          />
         </Route>
       </Routes>
     </BrowserRouter>

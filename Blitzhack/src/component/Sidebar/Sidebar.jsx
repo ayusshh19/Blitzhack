@@ -27,7 +27,7 @@ export default function Sidebar() {
     {
       label: "Production UNIT",
       icon: IconGauge,
-      link: "/production_dashboard",
+      link: "/",
       isroot: true,
       roles: ["production_manager"],
     },
@@ -35,12 +35,21 @@ export default function Sidebar() {
       label: "Supply Chain",
       icon: IconNotes,
       initiallyOpened: true,
-      roles: ["source_manager", "delivery_manager", "production_manager"],
+      roles: ["source_manager", "delivery_manager"],
       links: [
         { label: "Material Tracking", link: "/supplier" },
         { label: "Raw Material Record", link: "/supplier/material" },
         { label: "Material Analytics", link: "/supplier/material_history" },
       ],
+    },
+    {
+      label: "Supply Chain",
+      icon: IconNotes,
+      initiallyOpened:true,
+      roles:["production_manager"],
+      links:[
+        {label:"Material Tracking",link:"/production_manager"},
+      ]
     },
     {
       label: "Customer",
