@@ -15,6 +15,7 @@ import AnalyticsDashboard from "./Pages/Analytics";
 import Dashboard from "./Pages/Dashboard";
 import Supplier from "./Pages/Supplier";
 import ProfilePage from "./Pages/Profilepage";
+import ProductionPlannerDashboard from "./Pages/ProductionPlannerDashboard";
 
 function ProtectedLayout() {
   const user = localStorage.getItem("user");
@@ -54,6 +55,10 @@ function App() {
             element={<AnalyticsDashboard />}
           />
           <Route path="/profile" element={<ProfilePage />} />
+          <Route
+            path="/production_dashboard"
+            element={<ProductionPlannerDashboard />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>

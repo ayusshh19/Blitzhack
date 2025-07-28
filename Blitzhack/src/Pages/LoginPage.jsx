@@ -20,6 +20,7 @@ const roles = [
   { value: "source_manager", label: "Source Manager" },
   { value: "delivery_manager", label: "Delivery Manager" },
   { value: "customer", label: "Customer" },
+  { value: "production_manager", label: "Production Manager" },
 ];
 
 export default function LoginPage() {
