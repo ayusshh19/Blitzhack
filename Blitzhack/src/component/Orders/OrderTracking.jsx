@@ -986,7 +986,7 @@ export default function OrderTracking() {
           </Stack>
         )}
 
-        {modalData.stage === "Factory" && modalData.status === "completed" && (
+        {modalData?.stage === "Factory" && modalData.status === "completed" && (
           <Box mt="md">
             <Text size="sm" fw={600} mb="md">
               Batch Information
