@@ -25,13 +25,13 @@ export default function Sidebar() {
       roles: ["supplier", "customer", "source_manager", "delivery_manager"],
     },
     {
-      label: "Supplier",
+      label: "Source Management",
       icon: IconNotes,
       initiallyOpened: true,
-      roles: ["supplier", "source_manager", "delivery_manager"],
+      roles: ["source_manager", "delivery_manager"],
       links: [
         { label: "Material Tracking", link: "/supplier" },
-        { label: "Material Quotation", link: "/supplier/material" },
+        { label: "Raw Material Record", link: "/supplier/material" },
         { label: "Material Analytics", link: "/supplier/material_history" },
       ],
     },
