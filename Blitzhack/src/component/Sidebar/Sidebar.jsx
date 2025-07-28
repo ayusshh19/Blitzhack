@@ -28,7 +28,7 @@ export default function Sidebar() {
       label: "Supply Chain",
       icon: IconNotes,
       initiallyOpened: true,
-      roles: ["source_manager", "delivery_manager"],
+      roles: ["source_manager", "delivery_manager", "production_manager"],
       links: [
         { label: "Material Tracking", link: "/supplier" },
         { label: "Raw Material Record", link: "/supplier/material" },
