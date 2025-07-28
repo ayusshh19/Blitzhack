@@ -20,7 +20,6 @@ import ProductionPlannerDashboard from "./Pages/ProductionPlannerDashboard";
 
 function ProtectedLayout() {
   const user = localStorage.getItem("user");
-
   return user ? (
     <>
       <Sidebar />
@@ -31,7 +30,25 @@ function ProtectedLayout() {
   );
 }
 
+function HomePageRouter() {
+  const user_data = JSON.parse(localStorage.getItem("user"));
+  const userRole = user_data?.role || "";
+
+  if (!user_data) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (userRole === "production_manager") {
+    return <ProductionPlannerDashboard />;
+  }
+
+  return <Dashboard />;
+}
+
 function App() {
+  const user_data = JSON.parse(localStorage.getItem("user"));
+  const userRole = user_data?.role || "";
+  console.log(userRole);
   return (
     <BrowserRouter>
       <Routes>
@@ -39,12 +56,7 @@ function App() {
 
         {/* Protected Routes */}
         <Route element={<ProtectedLayout />}>
-          
-          (localStorage.getItem("user").role === "production_manager"? (<Route path="/" element={<ProductionPlannerDashboard />} />) : (<Route path="/" element={<Dashboard />} />))
-          {/* <Route
-            path="/production_dashboard"
-            element={<ProductionPlannerDashboard />}
-          /> */}
+          <Route path="/" element={<HomePageRouter />} />
           <Route path="/supplier" element={<Supplier />} />
           <Route
             path="/supplier/material"
@@ -54,9 +66,9 @@ function App() {
             path="/supplier/material_history"
             element={<MaterialSupplierHistory />}
           />
-          <Route 
+          <Route
             path="/production_manager"
-            element={<GlassProductionDashboard/>}  
+            element={<GlassProductionDashboard />}
           />
           <Route path="/order/:orderId" element={<OrderTracking />} />
           <Route path="/customer/material" element={<MaterialRequirement />} />
