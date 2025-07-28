@@ -25,6 +25,13 @@ export default function Sidebar() {
       roles: ["supplier", "customer", "source_manager", "delivery_manager"],
     },
     {
+      label: "Production UNIT",
+      icon: IconGauge,
+      link: "/",
+      isroot: true,
+      roles: ["production_manager"],
+    },
+    {
       label: "Source Management",
       icon: IconNotes,
       initiallyOpened: true,

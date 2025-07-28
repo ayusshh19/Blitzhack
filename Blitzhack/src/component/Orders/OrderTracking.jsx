@@ -502,7 +502,7 @@ export default function OrderTracking() {
         <Tabs.List>
           {Object.keys(batches).map((batchKey) => (
             <Tabs.Tab key={batchKey} value={batchKey}>
-              Batch #{batches[batchKey].orderId}
+              PO #{batches[batchKey].orderId}
             </Tabs.Tab>
           ))}
         </Tabs.List>
@@ -999,7 +999,7 @@ export default function OrderTracking() {
                   leftSection={<IconCheck size={14} />}
                   size="lg"
                 >
-                  Final Product: {trackingData.finalProductBatch}
+                  Product: {trackingData.finalProductBatch}
                 </Badge>
               </Group>
 
