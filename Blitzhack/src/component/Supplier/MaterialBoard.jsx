@@ -187,6 +187,7 @@ export default function SupplierMaterialListing() {
                     <th style={{ width: 100 }}>Qty Required</th>
                     <th style={{ minWidth: 140 }}>Compliance Status</th>
                     <th style={{ minWidth: 140 }}>Certifications</th>
+                    <th style={{ minWidth: 140 }}>Batch</th>
                     {/* Removed Blockchain Hash column */}
                     <th>Suppliers (ESG & Notes)</th>
                   </tr>
@@ -217,6 +218,7 @@ export default function SupplierMaterialListing() {
                         </Badge>
                       </td>
                       <td>{rm.certifications.join(", ")}</td>
+                      <td>{rm.batch}</td>
 
                       {/* Removed Blockchain Hash cell */}
 

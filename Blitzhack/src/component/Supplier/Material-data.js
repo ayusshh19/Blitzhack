@@ -5,6 +5,7 @@ export const requests = [
     material: "Float Glass",
     quantity: 1500,
     location: "Chennai Plant",
+    batch: "SG-1234578",
     rawMaterials: [
       {
         name: "Silica Sand",
@@ -12,6 +13,7 @@ export const requests = [
         origin: "Rajasthan, India",
         certifications: ["ISO 14001", "EcoCert"],
         complianceStatus: "Fully Compliant",
+        batch: "AX-1234578",
         blockchainHash:
           "f1c291fdd83a11733472bce89480a1b56e3cbbb5ee8c1684cb6c2376beaa7c5d",
         supplierHistory: [
@@ -33,6 +35,7 @@ export const requests = [
     material: "Gypsum Board",
     quantity: 2000,
     location: "Rajasthan Plant",
+    batch: "SG-1234578",
     rawMaterials: [
       {
         name: "Natural Gypsum",

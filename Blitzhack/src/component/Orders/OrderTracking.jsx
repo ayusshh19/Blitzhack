@@ -677,7 +677,12 @@ export default function OrderTracking() {
             </Group>
           </ScrollArea>
         </>
-      ) : ["customer", "supplier", "delivery_manager"].includes(userRole) ? (
+      ) : [
+          "customer",
+          "supplier",
+          "delivery_manager",
+          "source_manager",
+        ].includes(userRole) ? (
         <Alert color="red" title="Access Denied">
           You don't have permission to view production planning.
         </Alert>
