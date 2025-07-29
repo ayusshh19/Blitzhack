@@ -502,14 +502,14 @@ export default function OrderTracking() {
         <Tabs.List>
           {Object.keys(batches).map((batchKey) => (
             <Tabs.Tab key={batchKey} value={batchKey}>
-              PO #{batches[batchKey].orderId}
+              Material #{batches[batchKey].orderId}
             </Tabs.Tab>
           ))}
         </Tabs.List>
       </Tabs>
 
       <Text fw={700} size="xl" mb="xs">
-        Batch Tracking: #{trackingData.orderId}
+        Material Tracking: #{trackingData.orderId}
       </Text>
       <Text size="sm" c="dimmed" mb="md">
         Material: {trackingData.material}
